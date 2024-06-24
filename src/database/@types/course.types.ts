@@ -7,4 +7,5 @@ export interface ICourse extends Document {
     start_date: Date;
     end_date: Date;
     enrolled_students: Types.ObjectId[];
+    is_deleted: boolean;
 }

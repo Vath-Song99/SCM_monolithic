@@ -4,4 +4,5 @@ export interface IStudent extends Document {
     date_of_birth: Date;
     gender: 'male' | 'female' | 'other';
     phone_number: string;
+    is_deleted: boolean;
 }

@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-
   "scripts": {
     "start:dev": "cross-env NODE_ENV=development nodemon -r tsconfig-paths/register --legacy-watch  src/server.ts",
     "start": "pm2 start ecosystem.config.js",
@@ -12,7 +11,10 @@
     "delete": "pm2 delete all",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && cp package.json ./build/&& cp -R configs ./build/ && cp public_key.pem ./build/ && cp ecosystem.config.js ./build/",
     "test": "jest --coverage=true -w=1 --forceExit --detectOpenHandles --watchAll=false",
-    "clean": "rm -rf ./build && rm -rf ./src//*.js && rm -rf ./src//*.js.map"
+    "clean": "rm -rf ./build && rm -rf ./src//*.js && rm -rf ./src//*.js.map",
+    "build:img": "docker build -t scm:v1 -f Dockerfile.dev .",
+    "instance:container": "docker run -p 3000:3000 --name scm-container -v ./src:/app/src scm:v1",
+    "start:docker": "docker up scm-container "
   },
   "dependencies": {
     "compression": "^1.7.4",
@@ -20,18 +22,23 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "mongodb": "^6.5.0",
+    "joi": "^17.13.3",
+    "mongodb": "^6.7.0",
+    "mongoose": "^8.4.3",
     "swagger-ui-express": "^5.0.0",
-    "zod": "^3.22.4",
-    "tsoa": "^6.2.1"
+    "tsoa": "^6.2.1",
+    "winston": "^3.13.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/mongoose": "^5.11.97",
     "@types/compression": "^1.7.5",
     "@types/cors": "^2.8.17",
+    "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
     "@types/node": "^20.12.7",
     "@types/swagger-ui-express": "^4.1.6",
-    "@types/dotenv": "^8.2.0",
+    "@types/winston": "^2.4.4",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
