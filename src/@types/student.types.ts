@@ -17,7 +17,8 @@ export interface PartialIStudent {
 }
 
 
-export interface IStudentRespone extends IStudent {
+export interface IStudentResponse extends IStudent {
     _id: Types.ObjectId;
     is_deleted: boolean;
+    create_at: Date
 }

@@ -1,9 +1,10 @@
-import { ICourse, ICourseRespone, PartialICourse } from "@scm/@types/course.types";
+import { ICourse, ICourseResponse, PartialICourse } from "@scm/@types/course.types";
 
 
 export interface ICourseService {
-    createCourse(course: ICourse):ICourseRespone;
-    getCourseById(id: string):ICourseRespone;
-    updateCourseById(id: string , Course: PartialICourse):ICourseRespone;
-    deleteCourseById(id: string):null;
+    createCourse(course: ICourse):Promise<ICourseResponse>;
+    getCourseById(id: string):Promise<ICourseResponse>;
+    updateCourseById(id: string , course: PartialICourse):Promise<ICourseResponse>;
+    getAllCourses():Promise<ICourseResponse[]>
+    deleteCourseById(id: string):Promise<void>;
 }

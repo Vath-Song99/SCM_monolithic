@@ -1,4 +1,4 @@
-import { ICourse, ICourseRespone, PartialICourse } from "@scm/@types/course.types";
+import { ICourse, ICourseResponse, PartialICourse } from "@scm/@types/course.types";
 import { logger } from "@scm/utils/logger";
 import { courseModel } from "../model/course.model";
 import { ApiError } from "@scm/errors/api-error";
@@ -8,7 +8,8 @@ import { ICourseRepository } from "../@types/course.types";
 
 export class CourseRepository implements ICourseRepository {
     private static instance: CourseRepository;
-    private constructor() { } // Make constructor private to enforce singleton pattern
+
+    private constructor() { } // Private constructor to enforce singleton pattern
 
     static getInstance(): CourseRepository {
         if (!CourseRepository.instance) {
@@ -17,61 +18,61 @@ export class CourseRepository implements ICourseRepository {
         return CourseRepository.instance;
     }
 
-    async create(course: ICourse): Promise<ICourseRespone> {
+    async create(course: ICourse): Promise<ICourseResponse> {
         try {
             const newCourse = await new courseModel(course).save();
 
             if (!newCourse) {
-                throw new ApiError("Unable to create course!");
+                throw new ApiError("Failed to create course.");
             }
 
             return newCourse;
         } catch (error: unknown) {
-            logger.error(`An error occurs in create() ${error}`);
+            logger.error(`Error in create(): ${error}`);
             if (error instanceof ApiError) {
                 throw error;
             }
-            throw new ApiError(`Unexpected error occurs`);
+            throw new ApiError("Unexpected error occurred while creating course.");
         }
     }
 
-    async findById(id: string): Promise<ICourseRespone> {
+    async findById(id: string): Promise<ICourseResponse> {
         try {
             const course = await courseModel.findById(id);
 
             if (!course) {
-                throw new NotFoundError(`No course found with the specific id ${id}`);
+                throw new NotFoundError(`No course found with the specified ID: ${id}`);
             }
 
             return course;
         } catch (error: unknown) {
-            logger.error(`An error occurs in findById() ${error}`);
+            logger.error(`Error in findById(): ${error}`);
             if (error instanceof NotFoundError) {
                 throw error;
             }
-            throw new ApiError(`Unexpected error occurs`);
+            throw new ApiError("Unexpected error occurred while retrieving course.");
         }
     }
 
-    async findAll(): Promise<ICourseRespone[]> {
+    async findAll(): Promise<ICourseResponse[]> {
         try {
             const courses = await courseModel.find();
 
             if (!courses || courses.length === 0) {
-                throw new NotFoundError(`No courses found`);
+                throw new NotFoundError("No courses found.");
             }
 
             return courses;
         } catch (error: unknown) {
-            logger.error(`An error occurs in findAll() ${error}`);
+            logger.error(`Error in findAll(): ${error}`);
             if (error instanceof NotFoundError) {
                 throw error;
             }
-            throw new ApiError(`Unexpected error occurs`);
+            throw new ApiError("Unexpected error occurred while retrieving courses.");
         }
     }
 
-    async updateById(id: string, updateCourse: PartialICourse): Promise<ICourseRespone> {
+    async updateById(id: string, updateCourse: PartialICourse): Promise<ICourseResponse> {
         try {
             const courseUpdated = await courseModel.findByIdAndUpdate(
                 { _id: new ObjectId(id) },
@@ -80,34 +81,32 @@ export class CourseRepository implements ICourseRepository {
             );
 
             if (!courseUpdated) {
-                throw new ApiError(`Unable to update course!`);
+                throw new ApiError("Failed to update course.");
             }
 
             return courseUpdated;
         } catch (error: unknown) {
-            logger.error(`An error occurs in updateById() ${error}`);
+            logger.error(`Error in updateById(): ${error}`);
             if (error instanceof ApiError) {
                 throw error;
             }
-            throw new ApiError(`Unexpected error occurs`);
+            throw new ApiError("Unexpected error occurred while updating course.");
         }
     }
 
-    async deleteById(id: string): Promise<null> {
+    async deleteById(id: string): Promise<void> {
         try {
             const courseDeleted = await courseModel.findByIdAndDelete(id);
 
-            if (!courseDeleted?.is_deleted) {
-                throw new ApiError(`Unable to delete course!`);
+            if (!courseDeleted) {
+                throw new ApiError("Failed to delete course.");
             }
-
-            return null
         } catch (error: unknown) {
-            logger.error(`An error occurs in deleteById() ${error}`);
+            logger.error(`Error in deleteById(): ${error}`);
             if (error instanceof ApiError) {
                 throw error;
             }
-            throw new ApiError(`Unexpected error occurs`);
+            throw new ApiError("Unexpected error occurred while deleting course.");
         }
     }
 }

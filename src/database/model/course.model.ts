@@ -30,6 +30,10 @@ const CourseSchema = new Schema({
     is_deleted: {
         type: Boolean,
         default: false
+    },
+    create_at: {
+        type: Date,
+        default: Date.now
     }
 });
 

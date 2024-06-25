@@ -1,10 +1,10 @@
-import { PartialICourse } from "@scm/@types/course.types";
-import { IStudent, IStudentRespone } from "@scm/@types/student.types";
+import { IStudent, IStudentResponse, PartialIStudent } from "@scm/@types/student.types";
 
 
 export interface IStudentService {
-    createStudent(student: IStudent):IStudentRespone;
-    getStudentById(id: string):IStudentRespone;
-    updateStudentById(id: string , student: PartialICourse):IStudentRespone;
-    deleteStudentById(id: string):null;
+    createStudent(student: IStudent):Promise<IStudentResponse>;
+    getStudentById(id: string):Promise<IStudentResponse>;
+    getAllStudents():Promise<IStudentResponse[]>;
+    updateStudentById(id: string , student: PartialIStudent):Promise<IStudentResponse>;
+    deleteStudentById(id: string):Promise<void>;
 }

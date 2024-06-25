@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { ICourse, ICourseRespone, PartialICourse } from "@scm/@types/course.types";
+import { ICourse, ICourseResponse, PartialICourse } from "@scm/@types/course.types";
 
 export interface ICourseSchema extends Document {
     name: string;
@@ -9,13 +9,14 @@ export interface ICourseSchema extends Document {
     end_date: Date;
     enrolled_students: Types.ObjectId[];
     is_deleted: boolean;
+    create_at: Date
 }
 
 
 export interface ICourseRepository {
-    create(course: ICourse): Promise<ICourseRespone>;
-    findById(id: string): Promise<ICourseRespone>;
-    findAll(): Promise<ICourseRespone[]>;
-    updateById(id: string, updateCourse: PartialICourse): Promise<ICourseRespone>;
-    deleteById(id: string): Promise<null>; // Or you can return a success message or status if needed
+    create(course: ICourse): Promise<ICourseResponse>;
+    findById(id: string): Promise<ICourseResponse>;
+    findAll(): Promise<ICourseResponse[]>;
+    updateById(id: string, updateCourse: PartialICourse): Promise<ICourseResponse>;
+    deleteById(id: string): Promise<void>; // Or you can return a success message or status if needed
 }

@@ -19,7 +19,8 @@ export interface PartialICourse {
 }
 
 
-export interface ICourseRespone extends ICourse {
+export interface ICourseResponse extends ICourse {
     _id: Types.ObjectId;
     is_deleted: boolean;
+    create_at: Date
 }
