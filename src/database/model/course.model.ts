@@ -1,6 +1,6 @@
 
 import { model, Schema } from "mongoose";
-import { ICourse } from "../@types/course.types";
+import {  ICourseSchema } from "../@types/course.types";
 
 const CourseSchema = new Schema({
     name: {
@@ -37,4 +37,4 @@ const CourseSchema = new Schema({
 CourseSchema.index({ name: 1 }); // Index on name for efficient course lookup
 CourseSchema.index({ start_date: 1, end_date: 1 }); // Index on start_date and end_date for date-based queries
 
-export const courseModel = model<ICourse>("Courses", CourseSchema);
+export const courseModel = model<ICourseSchema>("Courses", CourseSchema);

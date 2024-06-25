@@ -1,5 +1,5 @@
 import app from "./app";
-import MongoDBConnector from "./database/db-connection";
+import MongoDBConnector from "./database";
 import getConfig from "./utils/configs";
 import { logger, logInit } from "./utils/logger";
 
