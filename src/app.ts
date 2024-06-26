@@ -6,7 +6,8 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import { errorHandler } from './middlewares/error-handler';
 import { ApiRoutes } from './routes';
-import router from './routes/student.routes';
+import studentRouter from './routes/student.routes';
+import courseRouter from './routes/course.routes';
 
 const app: Application = express();
 
@@ -35,7 +36,8 @@ app.use(express.json({
 }));
 
 // Routes
-app.use(ApiRoutes.BASE, router);
+app.use(ApiRoutes.BASE, studentRouter);
+app.use(ApiRoutes.BASE, courseRouter);
 
 // Global error handler
 app.use(errorHandler);

@@ -7,4 +7,5 @@ export interface IStudentService {
     getAllStudents():Promise<IStudentResponse[]>;
     updateStudentById(id: string , student: PartialIStudent):Promise<IStudentResponse>;
     deleteStudentById(id: string):Promise<void>;
+    searchStudents(searchTerm: string):Promise<IStudentResponse[]>;
 }

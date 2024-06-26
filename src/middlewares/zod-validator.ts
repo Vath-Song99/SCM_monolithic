@@ -1,3 +1,6 @@
+import { ApiError } from "@scm/errors/api-error";
+import { BaseCustomError } from "@scm/errors/base-custom-error";
+import { StatusCode } from "@scm/utils/consts";
 import { logger } from "@scm/utils/logger";
 import { NextFunction, Request, Response } from "express";
 import { Schema, ZodError } from "zod";
@@ -8,7 +11,7 @@ import { Schema, ZodError } from "zod";
  * @returns Express middleware function.
  */
 export const zodValidator = (schema: Schema) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, _res: Response, next: NextFunction) => {
     try {
       schema.parse(req.body);
       next();
@@ -17,10 +20,10 @@ export const zodValidator = (schema: Schema) => {
         const errorMessages = error.errors.map((issue) => {
           return `${issue.path.join(".")} ${issue.message}`;
         });
-        return res.status(422).json({ errors: errorMessages });
+        return next(new BaseCustomError(`${errorMessages}`,StatusCode.UnprocessableEntity))
       }
       logger.error("Error in zodValidator middleware:", error);
-      return res.status(500).json({ error: "Internal Server Error" });
+      return next(new ApiError("Internal server error"))
     }
   };
 };

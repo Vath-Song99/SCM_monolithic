@@ -12,6 +12,14 @@ export interface ICourseSchema extends Document {
     create_at: Date
 }
 
+export type CourseQuery = {
+    $or: {
+        name?: RegExp;
+        start_date?: RegExp;
+        end_date?: RegExp;
+    }[];
+};
+
 
 export interface ICourseRepository {
     create(course: ICourse): Promise<ICourseResponse>;

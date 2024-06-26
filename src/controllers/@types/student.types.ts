@@ -1,6 +1,11 @@
-import { IStudent, IStudentResponse } from "@scm/@types/student.types";
+import {  IStudent, IStudentResponse } from "@scm/@types/student.types";
 
 
 export interface IStudentController {
     createStudent(student: IStudent):Promise<IStudentResponse>;
+    getStudent(id: string):Promise<IStudentResponse>;
+    getAllStudents():Promise<IStudentResponse[]>
+    updateStudent(id: string , student: IStudent):Promise<IStudentResponse>
+    deleteStudent(id: string):Promise<void>
+    searchStudents(searchTerm: string):Promise<IStudentResponse[]>;
 }

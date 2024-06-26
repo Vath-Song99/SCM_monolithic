@@ -1,10 +1,13 @@
-import { IStudent, IStudentResponse, PartialIStudent } from "@scm/@types/student.types";
+import {  IStudent, IStudentResponse } from "@scm/@types/student.types";
 import { logger } from "@scm/utils/logger";
-import { studentModel } from "../model/student.model";
+import { studentModel } from "../models/student.model";
 import { ApiError } from "@scm/errors/api-error";
 import NotFoundError from "@scm/errors/not-found-error"; // Renamed from `NotFound` to `NotFoundError`
-import { ObjectId } from "mongodb";
-import { IStudentRepository } from "../@types/student.types";
+import {  ObjectId } from "mongodb";
+import { IStudentRepository, StudentQuery } from "../@types/student.types";
+import { IQueryParams } from "@scm/@types/queryParams";
+import DuplicateError from "@scm/errors/duplicate-error";
+import { FilterQuery } from "mongoose";
 
 export class StudentRepository implements IStudentRepository {
     private static instance: StudentRepository;
@@ -20,31 +23,44 @@ export class StudentRepository implements IStudentRepository {
 
     async create(student: IStudent): Promise<IStudentResponse> {
         try {
-            const newStudent = await new studentModel({
+            const existingStudent = await this.findOneByQuery({ phone_number: student.phone_number });
+    
+            if (existingStudent) {
+                throw new DuplicateError("Invalid phone number!");
+            }
+    
+            const newStudent = new studentModel({
                 ...student,
                 is_deleted: false
-            }).save(); // Await save() method
-
-            if (!newStudent) {
-                throw new ApiError("Faild to create student!");
+            });
+    
+            const savedStudent = await newStudent.save(); // Await save() method
+    
+            if (!savedStudent) {
+                throw new ApiError("Failed to create student!");
             }
-
-            return newStudent;
+    
+            return savedStudent as IStudentResponse; // Type assertion if necessary
         } catch (error: unknown) {
-            logger.error(`An error occurred in create() ${error}`);
-            if (error instanceof ApiError) {
+            logger.error(`An error occurred in create(): ${error}`);
+            
+            if (error instanceof ApiError || error instanceof DuplicateError) {
                 throw error;
             }
-            throw new ApiError(`Unexpected error occurred`);
+            
+            throw new ApiError("Unexpected error occurred while creating student");
         }
     }
+    
 
     async findById(id: string): Promise<IStudentResponse> {
         try {
-            const student = await studentModel.findById(id);
+            const student = await studentModel.findOne({
+                _id: new ObjectId(id), is_deleted: false
+            });
 
             if (!student) {
-                throw new NotFoundError(`No student found with the specific ID ${id}`);
+                throw new NotFoundError(`No student found with the specific ID!`);
             }
 
             return student;
@@ -59,7 +75,9 @@ export class StudentRepository implements IStudentRepository {
 
     async findAll(): Promise<IStudentResponse[]> {
         try {
-            const students = await studentModel.find();
+            const students = await studentModel.find({
+                is_deleted: false
+            });
 
             if (!students || students.length === 0) {
                 throw new NotFoundError(`No students found`);
@@ -75,8 +93,13 @@ export class StudentRepository implements IStudentRepository {
         }
     }
 
-    async updateById(id: string, student: PartialIStudent): Promise<IStudentResponse> {
+    async updateById(id: string, student: Partial<IStudent>): Promise<IStudentResponse> {
         try {
+            const existingStudent = await this.findOneByQuery({_id: new ObjectId(id), is_deleted: false})
+
+            if(!existingStudent){
+                throw new NotFoundError("No student found with the specific ID!")
+            }
             const studentUpdated = await studentModel.findByIdAndUpdate(
                 { _id: new ObjectId(id) },
                 student,
@@ -84,13 +107,13 @@ export class StudentRepository implements IStudentRepository {
             );
 
             if (!studentUpdated) {
-                throw new ApiError(`Faild to update student!`);
+                throw new ApiError(`Failed to update student!`);
             }
 
             return studentUpdated;
         } catch (error: unknown) {
             logger.error(`An error occurred in updateById() ${error}`);
-            if (error instanceof ApiError) {
+            if (error instanceof ApiError || error instanceof NotFoundError) {
                 throw error;
             }
             throw new ApiError(`Unexpected error occurred while updating student`);
@@ -99,20 +122,65 @@ export class StudentRepository implements IStudentRepository {
 
     async deleteById(id: string): Promise<void> {
         try {
+
+            const deletedStudent = await this.findOneByQuery({_id: new ObjectId(id) , is_deleted: true})
+
+            if(deletedStudent){
+                throw new DuplicateError("Student has been deleted!")
+            }
+
             const studentDeleted = await studentModel.findByIdAndUpdate(
                 { _id: new ObjectId(id) },
-                { is_deleted: true }
+                { is_deleted: true },
+                {new: true}
             );
 
             if (studentDeleted?.is_deleted === false) {
-                throw new ApiError(`Faild to delete student!`);
+                throw new ApiError(`Failed to delete student!`);
             }
         } catch (error: unknown) {
             logger.error(`An error occurred in deleteById() ${error}`);
-            if (error instanceof ApiError) {
+            if (error instanceof ApiError || error instanceof DuplicateError) {
                 throw error;
             }
             throw new ApiError(`Unexpected error occurred while deleting student`);
+        }
+    }
+
+
+    async findOneByQuery(queries : IQueryParams):Promise<IStudent | null>{
+        try{
+            const student = await studentModel.findOne(queries).exec();
+
+            return student
+        }catch(error: unknown){
+            logger.error(`An error occurred in findOneByQuery() ${error}`);
+       
+            throw new ApiError(`Unexpected error occurred while finding student`);
+        }
+    }  
+    
+    
+    async searchStudentsByQuery(queries: FilterQuery<StudentQuery>): Promise<IStudentResponse[]> {
+        try {
+            const students = await studentModel.find({
+                ...queries,
+                is_deleted: false
+            }).exec();
+    
+            if (!students || students.length === 0) {
+                throw new NotFoundError(`Can not find student with ${queries}`);
+            }
+    
+            return students;
+        } catch (error: unknown) {
+            logger.error(`An error occurred in searchStudentsByQuery(): ${error}`);
+            
+            if (error instanceof NotFoundError) {
+                throw error; // rethrow known errors
+            } else {
+                throw new ApiError(`Unexpected error occurred while searching for students`);
+            }
         }
     }
 }
