@@ -41,4 +41,4 @@ const CourseSchema = new Schema({
 CourseSchema.index({ name: 1 }); // Index on name for efficient course lookup
 CourseSchema.index({ start_date: 1, end_date: 1 }); // Index on start_date and end_date for date-based queries
 
-export const courseModel = model<ICourseSchema>("Courses", CourseSchema);
+export const courseModel = model<ICourseSchema>("courses", CourseSchema);

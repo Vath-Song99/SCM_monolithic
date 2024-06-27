@@ -1,4 +1,4 @@
-import {  IStudent, IStudentResponse } from "@scm/@types/student.types";
+import {   IStudent, IStudentReport, IStudentResponse } from "@scm/@types/student.types";
 import { IStudentService } from "./@types/student-service.types";
 import { StudentRepository } from "@scm/database/repositories/student.repository";
 import { logger } from "@scm/utils/logger";
@@ -8,6 +8,9 @@ import { ApiError } from "@scm/errors/api-error";
 import DuplicateError from "@scm/errors/duplicate-error";
 import {  ObjectId } from "mongodb";
 import { SearchQuery } from "@scm/@types/queryParams";
+import NotFoundError from "@scm/errors/not-found-error";
+import { CourseRepository } from "@scm/database/repositories/course.repository";
+import { Types } from "mongoose";
 
 
 export class StudentService implements IStudentService {
@@ -122,7 +125,7 @@ export class StudentService implements IStudentService {
                 ]
             }
     
-            const students = await this.studentRepository.searchStudentsByQuery(searchFields);
+            const students = await this.studentRepository.searchByQuery(searchFields);
 
             return students
         }catch(error: unknown){
@@ -132,4 +135,97 @@ export class StudentService implements IStudentService {
             throw error
         }
     }
+
+
+    async register(studentId: string, courseId: string): Promise<IStudentResponse> {
+        try {
+            if (!Types.ObjectId.isValid(studentId) || !Types.ObjectId.isValid(courseId)) {
+                throw new BaseCustomError("Invalid ID format!", StatusCode.BadRequest);
+            }
+    
+            const student = await this.studentRepository.findById(studentId) as any;
+            if (!student) {
+                throw new NotFoundError("No student found!");
+            }
+    
+            const courseService = CourseRepository.getInstance();
+            const course = await courseService.findById(courseId) as any;
+            if (!course) {
+                throw new NotFoundError("No course found!");
+            }
+    
+            if (student.courses.includes(course._id)) {
+                throw new DuplicateError("You're already registered to this course!");
+            }
+    
+            if (course.enrolled_students.includes(student._id)) {
+                throw new DuplicateError("You're already registered to this course!");
+            }
+    
+            student.courses.push(course._id);
+            course.enrolled_students.push(student._id);
+    
+            // Save the updated documents to the database
+            await student.save();
+            await course.save();
+    
+            return student;
+        } catch (error: unknown) {
+            logger.error(`An error occurred in register() ${error}`);
+            if (error instanceof BaseCustomError || error instanceof NotFoundError || error instanceof DuplicateError) {
+                throw error;
+            }
+            throw new ApiError("Failed to register!");
+        }
+    }
+    
+    async removeCourse(studentId: string, courseId: string): Promise<IStudentResponse> {
+        try{
+            if (!Types.ObjectId.isValid(studentId) || !Types.ObjectId.isValid(courseId)) {
+                throw new BaseCustomError("Invalid ID format!", StatusCode.BadRequest);
+            }
+
+            const student = await this.studentRepository.findById(studentId) as any;
+            if (!student) {
+                throw new NotFoundError("No student found!");
+            }
+    
+            const courseService = CourseRepository.getInstance();
+            const course = await courseService.findById(courseId) as any;
+            if (!course) {
+                throw new NotFoundError("No course found!");
+            }
+
+            student.courses = student.courses.filter(
+                (course: ObjectId) => !course.equals(courseId)
+              );
+              await student.save();
+          
+              course.enrolled_students = course.enrolled_students.filter(
+                (student: ObjectId) => !student.equals(studentId)
+              );
+              await course.save();
+
+              return student
+        }catch(error: unknown){
+            logger.error(`An error occurred in register() ${error}`);
+            if (error instanceof BaseCustomError || error instanceof NotFoundError || error instanceof DuplicateError) {
+                throw error;
+            }
+            throw new ApiError("Failed to register!");
+        }
+    }
+
+    async getStudentsReport(): Promise<IStudentReport[]> {
+        try{
+            const students = await this.studentRepository.getReport();
+
+            return students
+        }catch(error: unknown){
+            logger.error(`An error occurred in getStudentReport() ${error}`);
+            throw new ApiError("Failed to get students report!");
+        }
+    }
+
+
 }

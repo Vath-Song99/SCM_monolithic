@@ -1,4 +1,4 @@
-import { ICourse, ICourseResponse } from "@scm/@types/course.types";
+import { ICourse, ICourseReport, ICourseResponse } from "@scm/@types/course.types";
 import { IAdvanceSearch } from "@scm/@types/queryParams";
 
 
@@ -11,4 +11,5 @@ export interface ICourseController {
     deleteCourse(id: string):Promise<void>
     searchCourses(searchTerm: string):Promise<ICourseResponse[]>;
     advanceSearchCourses(searchTerms: IAdvanceSearch): Promise<ICourseResponse[]>;
+    getCoursesReport():Promise<ICourseReport[]>
 }

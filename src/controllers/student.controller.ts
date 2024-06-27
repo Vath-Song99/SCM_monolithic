@@ -1,6 +1,6 @@
 import { StudentService } from "@scm/services/student.service";
 import { IStudentController } from "./@types/student.types";
-import {  IStudent, IStudentResponse } from "@scm/@types/student.types";
+import {  IStudent, IStudentReport, IStudentResponse } from "@scm/@types/student.types";
 
 
 export class StudentController implements IStudentController{
@@ -77,4 +77,34 @@ export class StudentController implements IStudentController{
         }
     }
 
+    async register(studentId: string, courseId: string): Promise<IStudentResponse> {
+        try{
+            const student = await this.studentService.register(studentId , courseId);
+
+            return student
+        }catch(error: unknown){
+            throw error
+        }
+    }
+
+
+    async removeCourse(studentId: string, courseId: string): Promise<IStudentResponse> {
+        try{
+            const student = await this.studentService.removeCourse(studentId , courseId);
+
+            return student
+        }catch(error: unknown){
+            throw error
+        }
+    }
+
+
+    async getStudentsReport(): Promise<IStudentReport[]> {
+        try{
+            const studnets = await this.studentService.getStudentsReport();
+            return studnets;
+        }catch(error: unknown){
+            throw error
+        }
+    }
 }

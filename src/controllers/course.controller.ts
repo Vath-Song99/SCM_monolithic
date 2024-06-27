@@ -1,6 +1,6 @@
 import { CourseService } from "@scm/services/course.service";
 import { ICourseController } from "./@types/course.types";
-import { ICourse, ICourseResponse } from "@scm/@types/course.types";
+import { ICourse, ICourseReport, ICourseResponse } from "@scm/@types/course.types";
 import { IAdvanceSearch } from "@scm/@types/queryParams";
 
 
@@ -81,6 +81,16 @@ export class CourseController implements ICourseController{
         try{
             const course = await this.CourseService.advanceSearchCourses(searchTerm);
             return course
+        }catch(error: unknown){
+            throw error
+        }
+    }
+
+    
+    async getCoursesReport(): Promise<ICourseReport[]> {
+        try{
+            const courses = await this.CourseService.getCoursesReport();
+            return courses;
         }catch(error: unknown){
             throw error
         }

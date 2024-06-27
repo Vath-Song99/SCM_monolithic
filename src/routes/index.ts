@@ -1,35 +1,35 @@
 export enum ApiRoutes {
   // Base
-  BASE = '/api/v1',
-
+  BASE_STUDENT =  '/api/v1/students',
+  BASE_COURSE =  '/api/v1/courses',
   // Student CRUD Operations
-  CREATE_STUDENT = '/students',
-  RETRIEVE_STUDENT = '/students/:id',
-  UPDATE_STUDENT = '/students/:id',
-  DELETE_STUDENT = '/students/:id',
-  LIST_STUDENTS = '/students',
+  CREATE_STUDENT = '/',
+  RETRIEVE_STUDENT = '/:id',
+  UPDATE_STUDENT = '/:id',
+  DELETE_STUDENT = '/:id',
+  LIST_STUDENTS = '/',
 
   // Student Search
-  SEARCH_STUDENTS = '/students/search',
+  SEARCH_STUDENTS = '/search',
 
   // Course CRUD Operations
-  CREATE_COURSE = '/courses',
-  RETRIEVE_COURSE = '/courses/:id',
-  UPDATE_COURSE = '/courses/:id',
-  DELETE_COURSE = '/courses/:id',
-  LIST_COURSES = '/courses',
+  CREATE_COURSE = '/',
+  RETRIEVE_COURSE = '/:id',
+  UPDATE_COURSE = '/:id',
+  DELETE_COURSE = '/:id',
+  LIST_COURSES = '/',
 
   // Course Search
-  SEARCH_COURSES = '/courses/search',
-  ADVANCED_SEARCH_COURSES = '/courses/advanced-search',
+  SEARCH_COURSES = '/search',
+  ADVANCED_SEARCH_COURSES = '/advanced-search',
 
   // Register/Remove Course for Student
-  REGISTER_COURSE_FOR_STUDENT = '/students/:studentId/courses/:courseId',
-  REMOVE_COURSE_FOR_STUDENT = '/students/:studentId/courses/:courseId',
+  REGISTER_COURSE_FOR_STUDENT = '/:studentId/courses/:courseId',
+  REMOVE_COURSE_FOR_STUDENT = '/:studentId/courses/:courseId',
 
   // Course Report
-  COURSE_REPORT = '/courses/:id/report',
+  COURSE_REPORT = '/report',
 
   // Student Report
-  STUDENT_REPORT = '/students/:id/report'
+  STUDENT_REPORT = '/report'
 }

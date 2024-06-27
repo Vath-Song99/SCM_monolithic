@@ -1,4 +1,4 @@
-import { ICourse, ICourseResponse } from "@scm/@types/course.types";
+import { ICourse, ICourseReport, ICourseResponse } from "@scm/@types/course.types";
 import { logger } from "@scm/utils/logger";
 import { courseModel } from "../models/course.model";
 import { ApiError } from "@scm/errors/api-error";
@@ -161,7 +161,7 @@ export class CourseRepository implements ICourseRepository {
         }
     }
 
-    async searchCoursesByQuery(query: FilterQuery<CourseQuery>): Promise<ICourseResponse[]> {
+    async searchByQuery(query: FilterQuery<CourseQuery>): Promise<ICourseResponse[]> {
         try {
             const courses = await courseModel.find({
                 ...query,
@@ -183,5 +183,43 @@ export class CourseRepository implements ICourseRepository {
             }
         }
     }
+
+
+    async getReport(): Promise<ICourseReport[]> {
+        try{
+            const courses: ICourseReport[] = await courseModel.aggregate([
+                {
+                    $match: { is_deleted: false } // Filter out deleted courses
+                },
+                {
+                    $project: {
+                        name: 1,
+                        professor_name: 1,
+                        start_date: 1,
+                        end_date: 1,
+                        limit_number_of_students: 1,
+                        number_of_registered_students: { $size: { $ifNull: ["$enrolled_students", []] } }
+                    }
+                }
+            ]);
+    
+  
+        if(!courses){
+          throw new NotFoundError("No courses report found!")
+        }
+  
+        return courses
+        }catch(error: unknown){
+          logger.error(`An error occurred in getReport(): ${error}`);
+  
+          if (error instanceof NotFoundError) {
+            throw error; // rethrow known errors
+          } else {
+            throw new ApiError(
+              `Unexpected error occurred while get reporting for courses`
+            );
+          }
+        }
+        }
 
 }

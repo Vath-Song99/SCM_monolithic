@@ -25,6 +25,25 @@ courseRouter.post(ApiRoutes.CREATE_COURSE, zodValidator(CourseCreateSchema),  as
     }
 });
 
+courseRouter.get(ApiRoutes.COURSE_REPORT , async (_req: Request , res: Response , _next: NextFunction) =>{
+    try{
+
+
+        const controller = CourseController.getInstance();
+        const courses = await controller.getCoursesReport()
+
+
+        res.status(StatusCode.OK).json({
+            success: true,
+            statusCode: StatusCode.OK,
+            message: "Success get report for courses",
+            data: courses
+        })
+    }catch(error: unknown){
+        _next(error)
+    }
+})
+
 courseRouter.get(ApiRoutes.LIST_COURSES, async (_req: Request , res: Response , _next: NextFunction) =>{
     try{
         const controller = CourseController.getInstance();
@@ -47,13 +66,13 @@ courseRouter.get(ApiRoutes.SEARCH_COURSES, async (req: Request, res: Response, _
         const serachTerm = req.query.query as string
 
         const controller = CourseController.getInstance();
-        const students = await controller.searchCourses(serachTerm);
+        const courses = await controller.searchCourses(serachTerm);
 
         res.status(StatusCode.OK).json({
             success: true,
             statusCode: StatusCode.OK,
-            message: "Success search student",
-            data: students
+            message: "Success search for courses",
+            data: courses
         })
     }catch(error: unknown){
         _next(error)
@@ -66,13 +85,13 @@ courseRouter.get(ApiRoutes.ADVANCED_SEARCH_COURSES, async (req: Request, res: Re
         const {start_date , end_date } = req.query as Partial<IAdvanceSearch>;
 
         const controller = CourseController.getInstance();
-        const students = await controller.advanceSearchCourses({start_date, end_date});
+        const courses = await controller.advanceSearchCourses({start_date, end_date});
 
         res.status(StatusCode.OK).json({
             success: true,
             statusCode: StatusCode.OK,
-            message: "Success search student",
-            data: students
+            message: "Success search courses",
+            data: courses
         })
     }catch(error: unknown){
         _next(error)
@@ -135,7 +154,6 @@ courseRouter.delete(ApiRoutes.DELETE_COURSE, async (req: Request , res: Response
         _next(error)
     }
 })
-
 
 
 export default courseRouter;

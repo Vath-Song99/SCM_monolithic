@@ -1,4 +1,4 @@
-import { ICourse, ICourseResponse } from "@scm/@types/course.types";
+import { ICourse, ICourseReport, ICourseResponse } from "@scm/@types/course.types";
 import { ICourseService } from "./@types/course-service.types";
 import { CourseRepository } from "@scm/database/repositories/course.repository";
 import { logger } from "@scm/utils/logger";
@@ -137,7 +137,7 @@ export class CourseService implements ICourseService {
         $or: [{ name: { $regex: searchTerm, $options: "i" } }],
       };
 
-      const Courses = await this.CourseRepository.searchCoursesByQuery(
+      const Courses = await this.CourseRepository.searchByQuery(
         searchFields
       );
 
@@ -160,8 +160,7 @@ export class CourseService implements ICourseService {
             ],
           };
           
-
-      const courses = await this.CourseRepository.searchCoursesByQuery(
+      const courses = await this.CourseRepository.searchByQuery(
         searchFields
       );
 
@@ -171,4 +170,16 @@ export class CourseService implements ICourseService {
       throw error;
     }
   }
+
+
+  async getCoursesReport(): Promise<ICourseReport[]> {
+    try{
+        const courses = await this.CourseRepository.getReport();
+
+        return courses
+    }catch(error: unknown){
+        logger.error(`An error occurred in getCoursesReport() ${error}`);
+        throw new ApiError("Failed to get courses report!");
+    }
+}
 }

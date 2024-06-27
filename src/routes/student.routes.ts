@@ -24,6 +24,24 @@ studentRouter.post(ApiRoutes.CREATE_STUDENT, zodValidator(StudentCreateSchema), 
     }
 });
 
+studentRouter.get(ApiRoutes.STUDENT_REPORT , async (_req: Request , res: Response , _next: NextFunction) =>{
+    try{
+
+        const controller = StudentController.getInstance();
+        const students = await controller.getStudentsReport()
+
+
+        res.status(StatusCode.OK).json({
+            success: true,
+            statusCode: StatusCode.OK,
+            message: "Success get report for student",
+            data: students
+        })
+    }catch(error: unknown){
+        _next(error)
+    }
+})
+
 
 studentRouter.get(ApiRoutes.SEARCH_STUDENTS, async (req: Request, res: Response, _next: NextFunction) =>{
     try{    
@@ -79,6 +97,9 @@ studentRouter.get(ApiRoutes.RETRIEVE_STUDENT, async (req: Request , res: Respons
     }
 })
 
+
+
+
 studentRouter.put(ApiRoutes.UPDATE_STUDENT, zodValidator(StudentUpdateSchema), async (req: Request , res: Response , _next: NextFunction) =>{
     try{
         const studentId = req.params?.id.toString();
@@ -117,6 +138,48 @@ studentRouter.delete(ApiRoutes.DELETE_STUDENT, async (req: Request , res: Respon
     }
 })
 
+
+
+studentRouter.post(ApiRoutes.REGISTER_COURSE_FOR_STUDENT , async (req: Request , res: Response , _next: NextFunction) =>{
+    try{
+        const studnetId = req.params.studentId;
+        const courseId = req.params.courseId;
+
+        const controller = StudentController.getInstance();
+        const student = await controller.register(studnetId , courseId);
+
+
+        res.status(StatusCode.OK).json({
+            success: true,
+            statusCode: StatusCode.OK,
+            message: "Success registed student",
+            data: student
+        })
+    }catch(error: unknown){
+        _next(error)
+    }
+})
+
+
+studentRouter.delete(ApiRoutes.REMOVE_COURSE_FOR_STUDENT , async (req: Request , res: Response , _next: NextFunction) =>{
+    try{
+        const studnetId = req.params.studentId;
+        const courseId = req.params.courseId;
+
+        const controller = StudentController.getInstance();
+        const student = await controller.removeCourse(studnetId , courseId);
+
+
+        res.status(StatusCode.OK).json({
+            success: true,
+            statusCode: StatusCode.OK,
+            message: "Success deleted course for student",
+            data: student
+        })
+    }catch(error: unknown){
+        _next(error)
+    }
+})
 
 
 
