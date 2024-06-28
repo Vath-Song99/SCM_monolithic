@@ -24,7 +24,7 @@ const StudentSchema = new Schema({
         required: true,
         unique: true
     },
-    courses: [{ type: Types.ObjectId, ref: 'Courses' }],
+    courses: [{ type: Types.ObjectId, ref: 'Courses' , unique: true }],
     is_deleted: {
         type: Boolean,
         default: false

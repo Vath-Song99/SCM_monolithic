@@ -9,7 +9,7 @@ export interface IStudentSchema extends Document {
     gender: 'male' | 'female' | 'other';
     phone_number: string;
     is_deleted: boolean;
-    courses: Types.ObjectId[]
+    courses?: Types.ObjectId[]
     create_at: Date
 }
 

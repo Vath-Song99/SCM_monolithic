@@ -7,7 +7,7 @@ import { StatusCode } from "@scm/utils/consts";
 import { ApiError } from "@scm/errors/api-error";
 import DuplicateError from "@scm/errors/duplicate-error";
 import { ObjectId } from "mongodb";
-import { hasDuplicates } from "@scm/utils/duplicates";
+import { hasDuplicates } from "@scm/utils/duplicator";
 import {
   IAdvanceSearch,
   IAdvanceSearchQuery,

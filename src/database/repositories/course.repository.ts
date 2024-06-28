@@ -12,7 +12,7 @@ import { FilterQuery } from "mongoose";
 export class CourseRepository implements ICourseRepository {
     private static instance: CourseRepository;
 
-    private constructor() { } // Make constructor private to enforce singleton pattern
+    private constructor() { } 
 
     static getInstance(): CourseRepository {
         if (!CourseRepository.instance) {
@@ -149,7 +149,7 @@ export class CourseRepository implements ICourseRepository {
     }
 
 
-    async findOneByQuery(queries : IQueryParams):Promise<ICourse | null>{
+    async findOneByQuery(queries : IQueryParams):Promise<ICourseResponse | null>{
         try{
             const course = await courseModel.findOne(queries).exec();
 

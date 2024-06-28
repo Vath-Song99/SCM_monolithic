@@ -6,6 +6,7 @@ export interface IStudent {
     date_of_birth: Date;
     gender: 'male' | 'female' | 'other';
     phone_number: string;
+    courses?: Types.ObjectId[]
 }
 
 export interface PartialIStudent {
@@ -14,6 +15,7 @@ export interface PartialIStudent {
     date_of_birth?: Date;
     gender?: 'male' | 'female' | 'other';
     phone_number?: string;
+    courses?: Types.ObjectId[]
 }
 
 

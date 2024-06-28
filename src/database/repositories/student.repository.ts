@@ -26,11 +26,13 @@ export class StudentRepository implements IStudentRepository {
       const existingStudent = await this.findOneByQuery({
         phone_number: student.phone_number,
       });
-
+      
+      
       if (existingStudent) {
         throw new DuplicateError("Invalid phone number!");
       }
 
+  
       const newStudent = new studentModel({
         ...student,
         is_deleted: false,
@@ -159,7 +161,7 @@ export class StudentRepository implements IStudentRepository {
     }
   }
 
-  async findOneByQuery(queries: IQueryParams): Promise<IStudent | null> {
+  async findOneByQuery(queries: IQueryParams): Promise<IStudentResponse | null> {
     try {
       const student = await studentModel.findOne(queries).exec();
 
