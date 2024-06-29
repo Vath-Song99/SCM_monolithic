@@ -19,7 +19,7 @@ jobs:
         node-version: '14'  # Change this to your required Node.js version
 
     - name: Install dependencies
-      run: npm install  # Change to 'yarn install' if you use Yarn
+      run: yarn install  # Change to 'yarn install' if you use Yarn
 
     - name: Bump version and create tag
       id: bump-version
@@ -29,7 +29,7 @@ jobs:
         echo "Current version: $VERSION"
 
         # Increment the version (e.g., minor version bump)
-        NEW_VERSION=$(npm version minor --no-git-tag-version)
+        NEW_VERSION=$(yarn version minor --no-git-tag-version)
         echo "New version: $NEW_VERSION"
 
         # Configure Git
