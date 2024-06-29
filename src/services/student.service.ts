@@ -15,7 +15,8 @@ import { SearchQuery } from "@scm/@types/queryParams";
 import NotFoundError from "@scm/errors/not-found-error";
 import { CourseRepository } from "@scm/database/repositories/course.repository";
 import { Types } from "mongoose";
-import { hasDuplicates } from "@scm/utils/duplicator";
+import { areObjectIdArraysDisjoint, hasDuplicates } from "@scm/utils/duplicator";
+import { courseModel } from "@scm/database/models/course.model";
 
 export class StudentService implements IStudentService {
   private static instance: StudentService;
@@ -33,21 +34,37 @@ export class StudentService implements IStudentService {
 
   async createStudent(student: IStudent): Promise<IStudentResponse> {
     try {
-      const duplicatedCourse = hasDuplicates(
-        student.courses ? student.courses : []
-      );
-
+      // Check for duplicated courses
+      const duplicatedCourse = hasDuplicates(student.courses ? student.courses : []);
       if (duplicatedCourse) {
-        throw new DuplicateError("Duplicated course ID!");
+          throw new DuplicateError("Duplicated course IDs!");
       }
 
+      // Find courses by their IDs and ensure they are not deleted
+      const courseRepo = CourseRepository.getInstance();
+      const courses = await courseRepo.findManyByQuery({ 
+          _id: { $in: student.courses }, 
+          is_deleted: false 
+      });
+
+      if (courses.length !== student.courses!.length) {
+          throw new NotFoundError("One or more courses not found with the provided IDs!");
+      }
+
+      // Create the new student
       const newStudent = await this.studentRepository.create(student);
+
+      // Update the courses to include the new student's ID in enrolled_students
+      await courseModel.updateMany(
+          { _id: { $in: student.courses } },
+          { $push: { enrolled_students: newStudent._id } }
+      );
 
       return newStudent;
     } catch (error: unknown) {
       logger.error(`An error accurred in createStudent() ${error}`);
 
-      if (error instanceof DuplicateError) {
+      if (error instanceof DuplicateError || error instanceof NotFoundError) {
         throw error;
       }
       throw new ApiError("Fail to create student!");
@@ -116,11 +133,46 @@ export class StudentService implements IStudentService {
           student.phone_number !== existingStudent.phone_number && {
             phone_number: student.phone_number,
           }),
+        ...(student?.courses &&
+          areObjectIdArraysDisjoint(
+            student?.courses,
+            existingStudent.courses!
+          ) && {
+            $addToSet: { courses: { $each: student?.courses } }
+            }),
       };
       const hasUpdated = Object.keys(updateFields).length;
 
       if(hasUpdated === 0){
-        throw new NotFoundError("No value changes!")
+        throw new NotFoundError("No value changes!", StatusCode.BadRequest)
+      }
+
+      if (updateFields?.courses) {
+        // Find courses by their IDs and ensure they are not deleted
+        const studnetRepo = StudentRepository.getInstance();
+        const studnets = await studnetRepo.findManyByQuery({
+          _id: { $in: student.courses },
+          is_deleted: false,
+        });
+
+        if (studnets.length !==student.courses?.length) {
+          throw new NotFoundError(
+            "One or more courses not found with the provided IDs!"
+          );
+        }
+
+        const studentUpdated = await this.studentRepository.updateById(
+          id,
+          updateFields
+        );
+
+        // Update the courses to include the new student's ID in courses
+        await courseModel.updateMany(
+          { _id: { $in: student.courses } },
+          { $push: { courses: studentUpdated._id } }
+        );
+
+        return studentUpdated;
       }
       const studentUpdated = await this.studentRepository.updateById(
         id,

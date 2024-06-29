@@ -1,4 +1,8 @@
-import { IStudent, IStudentReport, IStudentResponse } from "@scm/@types/student.types";
+import {
+  IStudent,
+  IStudentReport,
+  IStudentResponse,
+} from "@scm/@types/student.types";
 import { logger } from "@scm/utils/logger";
 import { studentModel } from "../models/student.model";
 import { ApiError } from "@scm/errors/api-error";
@@ -25,14 +29,13 @@ export class StudentRepository implements IStudentRepository {
     try {
       const existingStudent = await this.findOneByQuery({
         phone_number: student.phone_number,
+        is_deleted: false,
       });
-      
-      
+
       if (existingStudent) {
         throw new DuplicateError("Invalid phone number!");
       }
 
-  
       const newStudent = new studentModel({
         ...student,
         is_deleted: false,
@@ -134,13 +137,13 @@ export class StudentRepository implements IStudentRepository {
 
   async deleteById(id: string): Promise<void> {
     try {
-      const deletedStudent = await this.findOneByQuery({
+      const existingStudent = await this.findOneByQuery({
         _id: new ObjectId(id),
-        is_deleted: true,
+        is_deleted: false,
       });
 
-      if (deletedStudent) {
-        throw new DuplicateError("Student has been deleted!");
+      if (!existingStudent) {
+        throw new NotFoundError("No student found with the provide ID!");
       }
 
       const studentDeleted = await studentModel.findByIdAndUpdate(
@@ -154,20 +157,38 @@ export class StudentRepository implements IStudentRepository {
       }
     } catch (error: unknown) {
       logger.error(`An error occurred in deleteById() ${error}`);
-      if (error instanceof ApiError || error instanceof DuplicateError) {
+      if (
+        error instanceof ApiError ||
+        error instanceof DuplicateError ||
+        error instanceof NotFoundError
+      ) {
         throw error;
       }
       throw new ApiError(`Unexpected error occurred while deleting student`);
     }
   }
 
-  async findOneByQuery(queries: IQueryParams): Promise<IStudentResponse | null> {
+  async findOneByQuery(
+    queries: IQueryParams
+  ): Promise<IStudentResponse | null> {
     try {
       const student = await studentModel.findOne(queries).exec();
 
       return student;
     } catch (error: unknown) {
       logger.error(`An error occurred in findOneByQuery() ${error}`);
+
+      throw new ApiError(`Unexpected error occurred while finding student`);
+    }
+  }
+
+  async findManyByQuery(queries: IQueryParams): Promise<IStudentResponse[]> {
+    try {
+      const students = await studentModel.find(queries).exec();
+
+      return students;
+    } catch (error: unknown) {
+      logger.error(`An error occurred in findManyByQuery() ${error}`);
 
       throw new ApiError(`Unexpected error occurred while finding student`);
     }
@@ -203,40 +224,38 @@ export class StudentRepository implements IStudentRepository {
   }
 
   async getReport(): Promise<IStudentReport[]> {
-      try{
-        const students: IStudentReport[] = await studentModel.aggregate([
-          {
-            $match: { is_deleted: false } // Filter out deleted students
+    try {
+      const students: IStudentReport[] = await studentModel.aggregate([
+        {
+          $match: { is_deleted: false }, // Filter out deleted students
+        },
+        {
+          $project: {
+            full_name_en: 1,
+            full_name_km: 1,
+            date_of_birth: 1,
+            gender: 1,
+            phone_number: 1,
+            number_of_courses: { $size: { $ifNull: ["$courses", []] } }, // Ensure 'courses' is an array
           },
-          {
-            $project: {
-              full_name_en: 1,
-              full_name_km: 1,
-              date_of_birth: 1,
-              gender: 1,
-              phone_number: 1,
-              number_of_courses: { $size: { $ifNull: ["$courses", []] } } // Ensure 'courses' is an array
-            }
-          }
-        ]);
+        },
+      ]);
 
-      if(!students){
-        throw new NotFoundError("No students report found!")
+      if (!students) {
+        throw new NotFoundError("No students report found!");
       }
 
-      return students
-      }catch(error: unknown){
-        logger.error(`An error occurred in getReport(): ${error}`);
+      return students;
+    } catch (error: unknown) {
+      logger.error(`An error occurred in getReport(): ${error}`);
 
-        if (error instanceof NotFoundError) {
-          throw error; // rethrow known errors
-        } else {
-          throw new ApiError(
-            `Unexpected error occurred while get reporting for students`
-          );
-        }
+      if (error instanceof NotFoundError) {
+        throw error; // rethrow known errors
+      } else {
+        throw new ApiError(
+          `Unexpected error occurred while get reporting for students`
+        );
       }
+    }
   }
-
-
 }

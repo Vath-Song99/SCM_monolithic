@@ -5,6 +5,7 @@ import {
   ICourseResponse,
   PartialICourse,
 } from "@scm/@types/course.types";
+import { IQueryParams } from "@scm/@types/queryParams";
 
 export interface ICourseSchema extends Document {
   name: string;
@@ -34,6 +35,8 @@ export interface ICourseRepository {
     updateCourse: PartialICourse
   ): Promise<ICourseResponse>;
   deleteById(id: string): Promise<void>; // Or you can return a success message or status if needed
+  findOneByQuery(queries : IQueryParams):Promise<ICourseResponse | null>;
+  findManyByQuery(queries : IQueryParams):Promise<ICourseResponse[]>;
   searchByQuery(
     queries: FilterQuery<CourseQuery>
   ): Promise<ICourseResponse[]>;

@@ -26,7 +26,6 @@ const CourseSchema = new Schema({
     enrolled_students: [{
         type: Schema.Types.ObjectId,
         ref: 'Students', // Referencing the Students model
-        unique: true
     }],
     is_deleted: {
         type: Boolean,

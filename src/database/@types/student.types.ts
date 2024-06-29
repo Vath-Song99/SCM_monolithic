@@ -28,7 +28,8 @@ export interface IStudentRepository {
     findAll(): Promise<IStudentResponse[]>;
     updateById(id: string, updateStudent: PartialIStudent): Promise<IStudentResponse>;
     deleteById(id: string): Promise<void>; // Or you can return a success message or status if needed
-    findOneByQuery(queries : IQueryParams):Promise<IStudent | null>
+    findOneByQuery(queries : IQueryParams):Promise<IStudentResponse | null>;
+    findManyByQuery(queries : IQueryParams):Promise<IStudentResponse[]>;
     searchByQuery(queries: FilterQuery<StudentQuery>):Promise<IStudentResponse[]>; 
     getReport(): Promise<IStudentReport[]>
 }
