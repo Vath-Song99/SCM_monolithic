@@ -2,8 +2,8 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*.*.*'  # This triggers the workflow on tags like v1.0.0
+    branches:
+      - main  # Trigger on push to the main branch
 
 jobs:
   release:
@@ -16,28 +16,48 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '14'  # Change this to your required Node.js version
 
     - name: Install dependencies
-      run: yarn install
+      run: npm install  # Change to 'yarn install' if you use Yarn
 
-    - name: Update version in package.json
+    - name: Bump version and create tag
+      id: bump-version
       run: |
-        VERSION=${GITHUB_REF#refs/tags/}
-        yarn version $VERSION --no-git-tag-version
+        # Extract the current version from package.json
+        VERSION=$(jq -r '.version' package.json)
+        echo "Current version: $VERSION"
+
+        # Increment the version (e.g., minor version bump)
+        NEW_VERSION=$(npm version minor --no-git-tag-version)
+        echo "New version: $NEW_VERSION"
+
+        # Configure Git
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
-        git add package.json
-        git commit -m "Update version to $VERSION"
 
-    - name: Push changes
+        # Commit the updated package.json
+        git add package.json
+        git commit -m "Bump version to $NEW_VERSION"
+
+        # Create a new tag
+        git tag -a "v$NEW_VERSION" -m "Release v$NEW_VERSION"
+        echo "New tag: v$NEW_VERSION"
+
+    - name: Push changes and tag
       run: |
-        git push origin HEAD:${GITHUB_REF#refs/tags/}
+        git push origin HEAD
+        git push origin "v$(jq -r '.version' package.json)"
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
+        tag_name: "v$(jq -r '.version' package.json)"
+        release_name: "Release v$(jq -r '.version' package.json)"
+        body: |
+          ## Changes
+          - Version updated to v$(jq -r '.version' package.json)
         files: |
-          dist/*.js
+          dist/*.js  # Adjust this to include the correct files in your release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
