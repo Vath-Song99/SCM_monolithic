@@ -16,10 +16,16 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'  # Change this to your required Node.js version
+        node-version: '16'  # Updated to Node.js version 16 to be compatible with express-rate-limit@7.3.1
 
     - name: Install dependencies
-      run: yarn install  # Change to 'yarn install' if you use Yarn
+      run: npm install  # Change to 'yarn install' if you use Yarn
+
+    - name: Build project
+      run: npm run build
+
+    - name: Run tests
+      run: npm test
 
     - name: Bump version and create tag
       id: bump-version
@@ -29,7 +35,7 @@ jobs:
         echo "Current version: $VERSION"
 
         # Increment the version (e.g., minor version bump)
-        NEW_VERSION=$(yarn version minor --no-git-tag-version)
+        NEW_VERSION=$(npm version minor --no-git-tag-version)
         echo "New version: $NEW_VERSION"
 
         # Configure Git
