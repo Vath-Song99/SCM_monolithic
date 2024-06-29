@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # This triggers the workflow on tags like v1.0.0
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Update version in package.json
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/}
+        yarn version $VERSION --no-git-tag-version
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git add package.json
+        git commit -m "Update version to $VERSION"
+
+    - name: Push changes
+      run: |
+        git push origin HEAD:${GITHUB_REF#refs/tags/}
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          dist/*.js
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
