@@ -5,7 +5,7 @@ const { combine, timestamp, printf, colorize, align } = winston.format;
 
 // Create a Winston Logger
 export const logger = winston.createLogger({
-  defaultMeta: { service: "Scm_monolithic" },
+  defaultMeta: { service: "SCM_monolithic" },
   // Add a timestamp to each log message & format in JSON
   format: combine(
     colorize({ all: true }),
@@ -35,7 +35,7 @@ export const logInit = ({
     logger.add(
       new winston.transports.File({
         level: logLevel,
-        filename: path.join(__dirname, "../../logs/api-gateway.log"),
+        filename: path.join(__dirname, "../../logs/scm.log"),
       })
     );
   }
