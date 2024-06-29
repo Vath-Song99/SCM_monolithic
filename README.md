@@ -13,8 +13,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="https://media.licdn.com/dms/image/D5603AQHTEe-kZ5XiQQ/profile-displayphoto-shrink_400_400/0/1719117281984?e=1724889600&v=beta&t=o4FGGwMPxtQ7Yv0F_TepyRgNpg4rDvQ2CD_cu59AfBw" alt="Logo" width="80" height="80">
+  <a href="https://github.com/vath-song99">
+    <img src="https://thesnipermind.com/images/blog/Everything-is-a-system.jpg" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Smoeury Songvat</h3>
@@ -275,15 +275,15 @@ Project Link: [https://github.com/vath-song99/scm_monolithic](https://github.com
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
-[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
-[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/scm_monolithic?style=for-the-badge
+[contributors-url]: https://github.com/vath-song99/scm_monolithic/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/vath-song99/scm_monolithic.svg?style=for-the-badge
+[forks-url]: https://github.com/vath-song99/scm_monolithic/network/members
+[stars-shield]: https://img.shields.io/github/stars/vath-song99/scm_monolithic.svg?style=for-the-badge
+[stars-url]: https://github.com/vath-song99/scm_monolithic/stargazers
+[issues-shield]: https://img.shields.io/github/issues/vath-song99/scm_monolithic.svg?style=for-the-badge
+[issues-url]: https://github.com/vath-song99/scm_monolithic/issues
+[license-shield]: https://img.shields.io/github/license/vath-song99/scm_monolithic.svg?style=for-the-badge
+[license-url]: https://github.com/vath-song99/scm_monolithic/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
+[linkedin-url]: https://linkedin.com/in/vath-song99
