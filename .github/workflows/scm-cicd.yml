@@ -81,7 +81,7 @@ jobs:
             NODE_ENV=${{ secrets.NODE_ENV }}
             PORT=${{ secrets.PORT }}
             LOG_LEVEL=${{ secrets.LOG_LEVEL }}
-            MONGODB_URL=${{ secrets.AUTH_MONGODB_URL}}
+            MONGODB_URL=${{ secrets.MONGODB_URL}}
             EOF
 
       - name: Start Application

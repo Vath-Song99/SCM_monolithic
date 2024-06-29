@@ -1,19 +1,19 @@
-import winston from "winston";
-import path from "path";
+// logger.js
+import winston from 'winston';
+import path from 'path';
 
 const { combine, timestamp, printf, colorize, align } = winston.format;
 
 // Create a Winston Logger
 export const logger = winston.createLogger({
   defaultMeta: { service: "SCM_monolithic" },
-  // Add a timestamp to each log message & format in JSON
   format: combine(
     colorize({ all: true }),
     timestamp(),
     align(),
     printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
   ),
-  transports: [],
+  transports: [], // Initially empty, will be configured in logInit
 });
 
 export const logInit = ({
@@ -26,16 +26,16 @@ export const logInit = ({
   // Output Logs to the Console (Unless it's Testing)
   logger.add(
     new winston.transports.Console({
-      level: logLevel,
-      silent: env === "testing",
+      level: logLevel || 'info',
+      silent: env === 'testing',
     })
   );
 
-  if (env !== "development") {
+  if (env !== 'development') {
     logger.add(
       new winston.transports.File({
-        level: logLevel,
-        filename: path.join(__dirname, "../../logs/scm.log"),
+        level: logLevel || 'info',
+        filename: path.join(__dirname, '../../logs/scm.log'),
       })
     );
   }
