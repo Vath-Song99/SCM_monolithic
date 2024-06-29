@@ -15,7 +15,10 @@ import { SearchQuery } from "@scm/@types/queryParams";
 import NotFoundError from "@scm/errors/not-found-error";
 import { CourseRepository } from "@scm/database/repositories/course.repository";
 import { Types } from "mongoose";
-import { areObjectIdArraysDisjoint, hasDuplicates } from "@scm/utils/duplicator";
+import {
+  areObjectIdArraysDisjoint,
+  hasDuplicates,
+} from "@scm/utils/duplicator";
 import { courseModel } from "@scm/database/models/course.model";
 
 export class StudentService implements IStudentService {
@@ -35,20 +38,24 @@ export class StudentService implements IStudentService {
   async createStudent(student: IStudent): Promise<IStudentResponse> {
     try {
       // Check for duplicated courses
-      const duplicatedCourse = hasDuplicates(student.courses ? student.courses : []);
+      const duplicatedCourse = hasDuplicates(
+        student.courses ? student.courses : []
+      );
       if (duplicatedCourse) {
-          throw new DuplicateError("Duplicated course IDs!");
+        throw new DuplicateError("Duplicated course IDs!");
       }
 
       // Find courses by their IDs and ensure they are not deleted
       const courseRepo = CourseRepository.getInstance();
-      const courses = await courseRepo.findManyByQuery({ 
-          _id: { $in: student.courses }, 
-          is_deleted: false 
+      const courses = await courseRepo.findManyByQuery({
+        _id: { $in: student.courses },
+        is_deleted: false,
       });
 
       if (courses.length !== student.courses!.length) {
-          throw new NotFoundError("One or more courses not found with the provided IDs!");
+        throw new NotFoundError(
+          "One or more courses not found with the provided IDs!"
+        );
       }
 
       // Create the new student
@@ -56,8 +63,8 @@ export class StudentService implements IStudentService {
 
       // Update the courses to include the new student's ID in enrolled_students
       await courseModel.updateMany(
-          { _id: { $in: student.courses } },
-          { $push: { enrolled_students: newStudent._id } }
+        { _id: { $in: student.courses } },
+        { $push: { enrolled_students: newStudent._id } }
       );
 
       return newStudent;
@@ -126,7 +133,8 @@ export class StudentService implements IStudentService {
             gender: student.gender,
           }),
         ...(student?.date_of_birth &&
-            new Date(student.date_of_birth).toISOString() !== existingStudent.date_of_birth.toISOString() && {
+          new Date(student.date_of_birth).toISOString() !==
+            existingStudent.date_of_birth.toISOString() && {
             date_of_birth: student.date_of_birth,
           }),
         ...(student?.phone_number &&
@@ -138,13 +146,13 @@ export class StudentService implements IStudentService {
             student?.courses,
             existingStudent.courses!
           ) && {
-            $addToSet: { courses: { $each: student?.courses } }
-            }),
+            $addToSet: { courses: { $each: student?.courses } },
+          }),
       };
       const hasUpdated = Object.keys(updateFields).length;
 
-      if(hasUpdated === 0){
-        throw new NotFoundError("No value changes!", StatusCode.BadRequest)
+      if (hasUpdated === 0) {
+        throw new NotFoundError("No value changes!", StatusCode.BadRequest);
       }
 
       if (updateFields?.courses) {
@@ -155,7 +163,7 @@ export class StudentService implements IStudentService {
           is_deleted: false,
         });
 
-        if (studnets.length !==student.courses?.length) {
+        if (studnets.length !== student.courses?.length) {
           throw new NotFoundError(
             "One or more courses not found with the provided IDs!"
           );

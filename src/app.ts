@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express, { Application, NextFunction , Request ,Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -8,6 +8,8 @@ import { errorHandler } from "./middlewares/error-handler";
 import { ApiRoutes } from "./routes";
 import studentRouter from "./routes/student.routes";
 import courseRouter from "./routes/course.routes";
+import { logger } from "./utils/logger";
+import { StatusCode } from "./utils/consts";
 
 const app: Application = express();
 
@@ -37,10 +39,16 @@ app.use(
   })
 );
 
-
 // Routes
 app.use(ApiRoutes.BASE_STUDENT, studentRouter);
 app.use(ApiRoutes.BASE_COURSE, courseRouter);
+app.use("*", (req: Request, res: Response, _next: NextFunction) => {
+  const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+  logger.error(`${fullUrl} endpoint does not exist`);
+  res
+    .status(StatusCode.NotFound)
+    .json({ message: "The endpoint called does not exist." });
+});
 
 // Global error handler
 app.use(errorHandler);

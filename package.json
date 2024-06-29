@@ -15,7 +15,8 @@
     "clean": "rm -rf ./build && rm -rf ./src//*.js && rm -rf ./src//*.js.map",
     "build:img": "docker build -t scm:v1 -f Dockerfile.dev .",
     "instance:container": "docker run -p 3000:3000 --name scm-container -v ./src:/app/src scm:v1",
-    "start:docker": "docker up scm-container "
+    "start:docker": "docker up scm-container ",
+    "connect:ec2": "ssh -i './scripts/scm.pem' ubuntu@ec2-34-229-202-116.compute-1.amazonaws.com"
   },
   "dependencies": {
     "compression": "^1.7.4",
