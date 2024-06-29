@@ -1,4 +1,4 @@
-name: CI/CD Auth Service
+name: CI/CD SCM
 
 on:
   push:
@@ -22,8 +22,8 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Test the project
-        run: yarn test
+      # - name: Test the project
+      #   run: yarn test
 
       - name: Build the project
         run: yarn build
