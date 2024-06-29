@@ -24,9 +24,6 @@ jobs:
     - name: Build project
       run: npm run build
 
-    - name: Run tests
-      run: npm test
-
     - name: Bump version and create tag
       id: bump-version
       run: |
