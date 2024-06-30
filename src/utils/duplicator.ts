@@ -31,5 +31,3 @@ export function areObjectIdArraysDisjoint(arr1: (ObjectId | string)[], arr2: (Ob
 
   return true;
 }
-
-

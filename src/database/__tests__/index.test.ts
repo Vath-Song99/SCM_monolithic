@@ -1,50 +1,66 @@
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import MongoDBConnector from '../index'; // Adjust the import path accordingly
+import mongoose from "mongoose";
+import MongoDBConnector from "..";
 
-describe('MongoDBConnector', () => {
-  let mongoServer: MongoMemoryServer;
-  let mongoDBConnector: MongoDBConnector;
+jest.mock("mongoose", () => ({
+  connect: jest.fn(),
+  disconnect: jest.fn(),
+  connection: {
+    on: jest.fn(),
+    removeAllListeners: jest.fn(),
+  },
+}));
 
-  beforeAll(async () => {
-    mongoServer = await MongoMemoryServer.create();
-  });
-
+describe("MongoDBConnector", () => {
   beforeEach(() => {
-    mongoDBConnector = MongoDBConnector.getInstance();
-  });
-
-  afterEach(async () => {
-    await mongoDBConnector.disconnect();
+    jest.clearAllMocks();
     MongoDBConnector.resetInstance();
   });
 
-  afterAll(async () => {
-    await mongoServer.stop();
+  it("should create a singleton instance", () => {
+    const instance1 = MongoDBConnector.getInstance();
+    const instance2 = MongoDBConnector.getInstance();
+    expect(instance1).toBe(instance2);
   });
 
-  it('should connect to MongoDB', async () => {
-    const mongoUri = mongoServer.getUri();
-    await mongoDBConnector.connect({ url: mongoUri });
-
-    expect(mongoose.connection.readyState).toBe(1); // 1 means connected
+  it("should set up event listeners on initialization", () => {
+    MongoDBConnector.getInstance();
+    expect(mongoose.connection.on).toHaveBeenCalledWith("connected", expect.any(Function));
+    expect(mongoose.connection.on).toHaveBeenCalledWith("error", expect.any(Function));
+    expect(mongoose.connection.on).toHaveBeenCalledWith("disconnected", expect.any(Function));
   });
 
-  it('should disconnect from MongoDB', async () => {
-    const mongoUri = mongoServer.getUri();
-    await mongoDBConnector.connect({ url: mongoUri });
-    await mongoDBConnector.disconnect();
-
-    expect(mongoose.connection.readyState).toBe(0); // 0 means disconnected
+  it("should connect to MongoDB", async () => {
+    const url = "mongodb://localhost:27017/test";
+    await MongoDBConnector.getInstance().connect({ url });
+    expect(mongoose.connect).toHaveBeenCalledWith(url);
   });
 
-  it('should handle connection errors', async () => {
-    const consoleSpy = jest.spyOn(console, 'log');
-    const invalidUri = 'mongodb+srv://learnwithkru:gT5jqfgZyQ8UmCNn@learnwithkru.elxl0wh.mongodb.net676rr/studentpppp';
+  it("should handle connection error", async () => {
+    const consoleSpy = jest.spyOn(console, "log").mockImplementation();
+    (mongoose.connect as jest.Mock).mockRejectedValue(new Error("Connection error"));
+    
+    const url = "mongodb://localhost:27017/test";
+    await MongoDBConnector.getInstance().connect({ url });
+    
+    expect(consoleSpy).toHaveBeenCalledWith("Initial MongoDB connection error", { err: expect.any(Error) });
+    consoleSpy.mockRestore();
+  });
 
-    await mongoDBConnector.connect({ url: invalidUri });
+  it("should disconnect from MongoDB", async () => {
+    const instance = MongoDBConnector.getInstance();
+    await instance.disconnect();
+    expect(mongoose.disconnect).toHaveBeenCalled();
+    expect(mongoose.connection.removeAllListeners).toHaveBeenCalled();
+  });
 
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('MongoDB disconnected'));
+  it("should handle disconnection event", async () => {
+    const consoleSpy = jest.spyOn(console, "log").mockImplementation();
+    
+    MongoDBConnector.getInstance();
+    const disconnectCallback = (mongoose.connection.on as jest.Mock).mock.calls.find(call => call[0] === "disconnected")[1];
+    disconnectCallback();
+
+    expect(consoleSpy).toHaveBeenCalledWith("MongoDB disconnected");
     consoleSpy.mockRestore();
   });
 });

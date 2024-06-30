@@ -20,10 +20,10 @@ export const zodValidator = (schema: Schema) => {
         const errorMessages = error.errors.map((issue) => {
           return `${issue.path.join(".")} ${issue.message}`;
         });
-        return next(new BaseCustomError(`${errorMessages}`,StatusCode.UnprocessableEntity))
+        return next(new BaseCustomError(`${errorMessages}`, StatusCode.UnprocessableEntity));
       }
       logger.error("Error in zodValidator middleware:", error);
-      return next(new ApiError("Internal server error"))
+      return next(new ApiError("Internal server error"));
     }
   };
 };

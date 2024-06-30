@@ -1,6 +1,6 @@
 import app from "./app";
 import MongoDBConnector from "./database";
-import getConfig from "./utils/configs";
+import {getConfig} from "./utils/configs";
 import { logger, logInit } from "./utils/logger";
 
 async function run() {

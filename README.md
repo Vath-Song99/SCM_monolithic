@@ -5,7 +5,6 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 
@@ -14,7 +13,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/vath-song99">
-    <img src="https://thesnipermind.com/images/blog/Everything-is-a-system.jpg" alt="Logo" width="80" height="80">
+    <img src="https://thesnipermind.com/images/blog/Everything-is-a-system.jpg" alt="Logo" width="85" height="80">
   </a>
 
   <h3 align="center">Smoeury Songvat</h3>

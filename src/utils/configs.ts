@@ -11,7 +11,6 @@ function createConfig(configPath: string) {
     "PORT",
     "MONGODB_URL",
     "LOG_LEVEL",
-   
   ];
   const missingConfig = requiredConfig.filter((key) => !process.env[key]);
 
@@ -30,7 +29,7 @@ function createConfig(configPath: string) {
   };
 }
 
-function getConfig(currentEnv: string = "development") {
+export function getConfig(currentEnv: string = "development") {
   const configPath = path.join(
     __dirname,
     currentEnv === "development"
@@ -41,5 +40,3 @@ function getConfig(currentEnv: string = "development") {
   );
   return createConfig(configPath);
 }
-
-export default getConfig;
