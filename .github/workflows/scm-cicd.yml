@@ -23,6 +23,7 @@ jobs:
         run: yarn install
 
       - name: Set environment variables
+        run: echo "Setting environment variables"
         env:
           PORT: 3000
           MONGODB_URL: ${{ secrets.MONGODB_URL_TEST }}
@@ -32,15 +33,15 @@ jobs:
         id: test
         run: |
           npm test -- --json > test-results.json
-          PASS=$(cat test-results.json | jq -r '.numPassedTests')
-          TOTAL=$(cat test-results.json | jq -r '.numTotalTests')
+          PASS=$(jq -r '.numPassedTests' test-results.json)
+          TOTAL=$(jq -r '.numTotalTests' test-results.json)
           PASS_PERCENT=$((PASS * 100 / TOTAL))
           echo "Passed tests: $PASS / $TOTAL"
           echo "Pass percentage: $PASS_PERCENT%"
-          echo "::set-output name=pass_percent::$PASS_PERCENT"
+          echo "pass_percent=$PASS_PERCENT" >> $GITHUB_ENV
 
       - name: Check pass percentage and stop action on failure
-        if: ${{ steps.test.outputs.pass_percent < 50 }}
+        if: steps.test.outputs.pass_percent < 50
         run: |
           echo "Pass percentage is less than 50%. Stopping the action."
           exit 1
@@ -113,7 +114,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          script: |
+        run: |
             #!/bin/bash
 
             # Check if nvm is installed
@@ -153,4 +154,3 @@ jobs:
             else
               echo "Application is not running. Starting..."
               pm2 start ./src/server.js --name SCM
-            fi
