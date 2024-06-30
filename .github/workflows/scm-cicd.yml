@@ -54,7 +54,6 @@ jobs:
           name: build
           path: build
 
-
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -70,7 +69,7 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      
+
       - name: Ensure target directory exists
         uses: appleboy/ssh-action@master
         with:
