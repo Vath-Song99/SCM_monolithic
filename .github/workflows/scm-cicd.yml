@@ -22,26 +22,19 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      # - name: Set environment variables
-      #   run: echo "Setting environment variables"
-      #   env:
-      #     PORT: 3000
-      #     MONGODB_URL: ${{ secrets.MONGODB_URL_TEST }}
-      #     LOG_LEVEL: debug
-
       - name: Run tests and calculate pass percentage
         id: test
         run: |
           npm test -- --json > test-results.json
-          PASS=$(jq -r '.numPassedTests' test-results.json)
-          TOTAL=$(jq -r '.numTotalTests' test-results.json)
+          PASS=$(cat test-results.json | jq -r '.numPassedTests')
+          TOTAL=$(cat test-results.json | jq -r '.numTotalTests')
           PASS_PERCENT=$((PASS * 100 / TOTAL))
           echo "Passed tests: $PASS / $TOTAL"
           echo "Pass percentage: $PASS_PERCENT%"
-          echo "pass_percent=$PASS_PERCENT" >> $GITHUB_ENV
+          echo "::set-output name=pass_percent::$PASS_PERCENT"
 
       - name: Check pass percentage and stop action on failure
-        if: steps.test.outputs.pass_percent < 50
+        if: ${{ steps.test.outputs.pass_percent < 50 }}
         run: |
           echo "Pass percentage is less than 50%. Stopping the action."
           exit 1
@@ -54,6 +47,7 @@ jobs:
         with:
           name: build
           path: build
+
 
   deploy:
     needs: build
@@ -70,7 +64,7 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
+      
       - name: Ensure target directory exists
         uses: appleboy/ssh-action@master
         with:
@@ -114,7 +108,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-        run: |
+          script: |
             #!/bin/bash
 
             # Check if nvm is installed
@@ -154,3 +148,4 @@ jobs:
             else
               echo "Application is not running. Starting..."
               pm2 start ./src/server.js --name SCM
+            fi
