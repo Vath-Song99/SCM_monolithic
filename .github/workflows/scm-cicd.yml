@@ -21,9 +21,6 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
-        
-      - name: Set up environment variables
-        run: cp .env.test .env
 
       - name: Run tests and calculate pass percentage
         id: test
