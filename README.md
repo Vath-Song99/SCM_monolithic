@@ -128,6 +128,25 @@ _Below is an example of how to settup the project requirement
 <!-- USAGE EXAMPLES -->
 ## Usage
 
+_Below is an example of how to settup the project requirement
+
+1. START Server
+   ```sh
+   npm run start:dev
+   ```
+    or
+    ```sh
+   yarn start:dev
+     ```
+2. RUN Test
+   ```sh
+   npm run test
+   ```
+   or
+
+   ```sh
+   yarn test
+   ```   
 Below are some examples of how to use the API endpoints.
 
 _For more examples, please refer to the [Documentation](https://sudden-wallet-fe9.notion.site/Student-Course-Management-0e52fd0b1b0c43b2957a56ffc41ff010?pvs=4)_
@@ -180,7 +199,7 @@ _For more examples, please refer to the [Documentation](https://sudden-wallet-fe
     {
         "full_name_en": "John Doe",
         "full_name_km": "សុខ ស៊ីម៉ាន់",
-        "date_of_birth": "1990-05-15T00:00:00.000Z",
+        "date_of_birth": "1990-05-15", # format "yy,mm,dd"
         "gender": "male", # noted gender only lowercase
         "phone_number": "+855973238144",
         "courses": [
@@ -196,8 +215,8 @@ _For more examples, please refer to the [Documentation](https://sudden-wallet-fe
         "name": "Introduction to Computer Science",
         "professor_name": "Dr. Jane Smith",
         "limit_number_of_students": 30,
-        "start_date": "2024-09-01T00:00:00.000Z",
-        "end_date": "2024-12-15T00:00:00.000Z",
+        "start_date": "2024-09-01",
+        "end_date": "2024-12-15",
         "enrolled_students": [
             "667f9b5d608df88473d6dc1a",
             "667fbc0c2ee96d8d99d0b68e"
