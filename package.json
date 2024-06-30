@@ -11,7 +11,7 @@
     "restart": "pm2 restart ecosystem.config.js",
     "delete": "pm2 delete all",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && cp package.json ./build/&& cp -R configs ./build/ && cp ecosystem.config.js ./build/",
-    "test": "jest --coverage=true -w=1 --forceExit --detectOpenHandles --watchAll=true",
+    "test": "jest --coverage=true -w=1 --forceExit --detectOpenHandles --watchAll=false",
     "clean": "rm -rf ./build && rm -rf ./src//*.js && rm -rf ./src//*.js.map",
     "build:img": "docker build -t scm:v1 -f Dockerfile.dev .",
     "instance:container": "docker run -p 3000:3000 --name scm-container -v ./src:/app/src scm:v1",
