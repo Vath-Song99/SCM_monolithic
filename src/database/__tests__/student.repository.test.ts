@@ -16,7 +16,7 @@ describe('StudentRepository Integration Test', () => {
     }
     await mongoose.connect(uri);
     studentRepository = StudentRepository.getInstance();
-  },20000);
+  });
 
   afterAll(async () => {
     await mongoose.disconnect();
@@ -24,7 +24,7 @@ describe('StudentRepository Integration Test', () => {
 
   afterEach(async () => {
     await studentModel.deleteMany({});
-  });
+  },10000);
 
   it('should create a student successfully', async () => {
     const studentData: IStudent = {

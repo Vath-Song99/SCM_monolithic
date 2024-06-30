@@ -25,7 +25,7 @@ describe('CourseRepository Integration Test', () => {
 
   afterEach(async () => {
     await courseModel.deleteMany({});
-  });
+  },10000);
 
   it('should create a course successfully', async () => {
     const courseData: ICourse = {
