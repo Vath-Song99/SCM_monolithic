@@ -8,11 +8,11 @@ import { ApiRoutes } from '..';
 import courseRouter from '../course.routes';
 
 
-const config = getConfig("test")
+const config = getConfig()
 
 describe('Student API Routes', () => {
     let app: Application;
-    const testDbUri = config.mongoUrl; 
+    const testDbUri = config.mongoUrlTest; 
 
     beforeAll(async () => {
         // Connect to the test database
