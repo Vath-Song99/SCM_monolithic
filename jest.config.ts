@@ -28,6 +28,7 @@ const config: Config.InitialOptions = {
   moduleNameMapper: {
     '@scm/(.*)': ['<rootDir>/src/$1'],
   },
+  setupFiles: ["<rootDir>/jest.setup.ts"],
 };
 
 export default config;

@@ -26,7 +26,6 @@ function createConfig(configPath: string) {
     port: process.env.PORT,
     mongoUrl: process.env.MONGODB_URL,
     logLevel: process.env.LOG_LEVEL,
-    mongoUrlTest: process.env.MONGODB_URL_TEST,
   };
 }
 

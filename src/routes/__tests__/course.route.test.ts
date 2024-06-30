@@ -6,11 +6,11 @@ import courseRouter from '../course.routes';
 import { getConfig } from '@scm/utils/configs';
 import { ApiRoutes } from '..';
 
-const config = getConfig();
+const config = getConfig("test");
 
 describe('Course API Routes', () => {
     let app: Application;
-    const testDbUri = config.mongoUrlTest;
+    const testDbUri = config.mongoUrl;
 
     beforeAll(async () => {
         await mongoose.connect(testDbUri!);

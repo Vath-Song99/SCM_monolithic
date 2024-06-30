@@ -1,8 +1,6 @@
-// import path from 'path';
 import dotenv from 'dotenv';
 import { getConfig } from '../configs';
 import { ApiError } from '@scm/errors/api-error';
-
 
 // Mocking dotenv
 jest.mock('dotenv', () => ({
@@ -17,7 +15,7 @@ describe('getConfig', () => {
     process.env = { ...originalEnv }; // Reset process.env to original values
   });
 
-  afterAll(() => {
+  afterEach(() => {
     process.env = originalEnv; // Restore the original environment
   });
 
@@ -25,9 +23,13 @@ describe('getConfig', () => {
     (dotenv.config as jest.Mock).mockReturnValue({ parsed: {} });
 
     const requiredConfig = ["NODE_ENV", "PORT", "MONGODB_URL", "LOG_LEVEL"];
-    const missingConfig = requiredConfig.filter((key) => !process.env[key]);
+    requiredConfig.forEach((key) => {
+      delete process.env[key];
+    });
 
-    expect(() => getConfig('development')).toThrow(new ApiError(`Missing required environment variables: ${missingConfig.join(", ")}`));
+    expect(() => getConfig('development')).toThrow(
+      new ApiError(`Missing required environment variables: ${requiredConfig.join(", ")}`)
+    );
   });
 
   it('should return configuration object if all required environment variables are present', () => {
@@ -46,13 +48,4 @@ describe('getConfig', () => {
       logLevel: 'debug',
     });
   });
-
 });
-
-
-
-
-
-
-
-
