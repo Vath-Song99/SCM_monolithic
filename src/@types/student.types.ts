@@ -15,7 +15,10 @@ export interface PartialIStudent {
     date_of_birth?: Date;
     gender?: 'male' | 'female' | 'other';
     phone_number?: string;
-    courses?: Types.ObjectId[]
+    courses?: Types.ObjectId[];
+    _id?: Types.ObjectId;
+    is_deleted?: boolean;
+    create_at?: Date
 }
 
 

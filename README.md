@@ -7,8 +7,6 @@
 [![Issues][issues-shield]][issues-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
-
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -21,10 +19,10 @@
   <p align="center">
     School and Course Management projects!
     <br />
-    <a href="https://github.com/vath-song99/SCM_monolithic"><strong>Explore the docs »</strong></a>
+    <a href="https://www.postman.com/scm666-8604/workspace/scm-workspace/collection/30787235-76b903d7-4573-4c71-b72b-bee7e76297e7?action=share&creator=30787235&active-environment=30787235-f395e208-c66f-49bd-ba54-ea73b17ffa90"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/vath-song99/SCM_monolithic">View Demo</a>
+    <a href="https://www.postman.com/scm666-8604/workspace/scm-workspace/collection/30787235-76b903d7-4573-4c71-b72b-bee7e76297e7?action=share&creator=30787235&active-environment=30787235-f395e208-c66f-49bd-ba54-ea73b17ffa90">View Demo</a>
     ·
     <a href="https://github.com/Vath-Song99/SCM_monolithic/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
@@ -78,7 +76,7 @@ This section list any major frameworks/libraries used to bootstrap my project.
 ## Getting Started
 
 - ### Deployed
-  *To use the deployed API, click here.*[click-here](https://d2oq0pn49kagg5.cloudfront.net/api/v1/students)
+  *To test the deployed API, click here.*[click-here](https://www.postman.com/scm666-8604/workspace/scm-workspace/collection/30787235-76b903d7-4573-4c71-b72b-bee7e76297e7?action=share&creator=30787235&active-environment=30787235-f395e208-c66f-49bd-ba54-ea73b17ffa90)
 
 
 - ### Local
@@ -128,7 +126,7 @@ _Below is an example of how to settup the project requirement
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-_Below is an example of how to settup the project requirement
+_Below is an example of how to get start the project!
 
 1. START Server
    ```sh
@@ -149,7 +147,7 @@ _Below is an example of how to settup the project requirement
    ```   
 Below are some examples of how to use the API endpoints.
 
-_For more examples, please refer to the [Documentation](https://sudden-wallet-fe9.notion.site/Student-Course-Management-0e52fd0b1b0c43b2957a56ffc41ff010?pvs=4)_
+_For more examples, please refer to the [Documentation](https://www.postman.com/scm666-8604/workspace/scm-workspace/collection/30787235-76b903d7-4573-4c71-b72b-bee7e76297e7?action=share&creator=30787235&active-environment=30787235-f395e208-c66f-49bd-ba54-ea73b17ffa90)_
 
 ### Endpoint
 
@@ -220,7 +218,7 @@ _For more examples, please refer to the [Documentation](https://sudden-wallet-fe
         "enrolled_students": [
             "667f9b5d608df88473d6dc1a",
             "667fbc0c2ee96d8d99d0b68e"
-        ], # noted enrolled_students can optionaly
+        ], # noted enrolled_students can be optionaly 
     }
 ```
   

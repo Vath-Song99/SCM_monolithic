@@ -36,7 +36,9 @@ export function getConfig(currentEnv: string = "development") {
       ? "../../configs/.env"
       : currentEnv === "staging"
       ? "../../configs/.env.staging"
-      : "../../configs/.env.production"
+      : currentEnv === "production" 
+      ? "../../configs/.env.production"
+      : "../../configs/.env.test"
   );
   return createConfig(configPath);
 }
