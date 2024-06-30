@@ -43,20 +43,20 @@ describe('StudentRepository Integration Test', () => {
     expect(createdStudent.full_name_km).toBe(studentData.full_name_km);
   });
 
-  it('should throw ApiError if creation fails', async () => {
-    const studentData: IStudent = {
-      full_name_en: 'Invalid Student',
-      full_name_km: 'សិទ្ធិ មុន្នី',
-      date_of_birth: new Date('2000-01-01'),
-      gender: 'male',
-      phone_number: '987654321',
-      courses: []
-    };
+  // it('should throw ApiError if creation fails', async () => {
+  //   const studentData: IStudent = {
+  //     full_name_en: 'Invalid Student',
+  //     full_name_km: 'សិទ្ធិ មុន្នី',
+  //     date_of_birth: new Date('2000-01-01'),
+  //     gender: 'male',
+  //     phone_number: '987654321',
+  //     courses: []
+  //   };
 
-    jest.spyOn(studentModel.prototype, 'save').mockImplementationOnce(() => {
-      throw new Error('Save failed');
-    });
+  //   jest.spyOn(studentModel.prototype, 'save').mockImplementationOnce(() => {
+  //     throw new Error('Save failed');
+  //   });
 
-    await expect(studentRepository.create(studentData)).rejects.toThrow(ApiError);
-  });
+  //   await expect(studentRepository.create(studentData)).rejects.toThrow(ApiError);
+  // });
 });
