@@ -13,7 +13,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/vath-song99">
-    <img src="https://thesnipermind.com/images/blog/Everything-is-a-system.jpg" alt="Logo" width="85" height="80">
+    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Smoeury Songvat</h3>
@@ -56,6 +56,9 @@
   </ol>
 </details>
 
+### About The Project
+
+The School and Course Management project is a comprehensive system designed to manage students and courses efficiently. It includes features such as student and course CRUD operations, search functionalities, and reporting.
 
 
 ### Built With
@@ -74,11 +77,14 @@ This section list any major frameworks/libraries used to bootstrap my project.
 <!-- GETTING STARTED -->
 ## Getting Started
 
-If you prefer the api that deployed you can click ure this URL.[click-here](https://d2oq0pn49kagg5.cloudfront.net)
+- ### Deployed
+  *To use the deployed API, click here.*[click-here](https://d2oq0pn49kagg5.cloudfront.net/api/v1/students)
 
-### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+- ### Local
+  #### Prerequisites
+
+  *This is an example of how to list things you need to use the software and how to install them.*
 * npm
   ```sh
   npm install npm@latest -g
@@ -111,7 +117,7 @@ _Below is an example of how to settup the project requirement
    ```js
     NODE_ENV=development    
     LOG_LEVEL=debug
-    MONGODB_URL=**********
+    MONGODB_URL=your_mongodb_url
     PORT=3000
    ```
 
@@ -122,9 +128,9 @@ _Below is an example of how to settup the project requirement
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+Below are some examples of how to use the API endpoints.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+_For more examples, please refer to the [Documentation](https://sudden-wallet-fe9.notion.site/Student-Course-Management-0e52fd0b1b0c43b2957a56ffc41ff010?pvs=4)_
 
 ### Endpoint
 
