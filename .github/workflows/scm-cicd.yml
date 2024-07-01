@@ -18,18 +18,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-
-      - name: Create .env.test file
+      
+      - name: Create .env file
+        env:
+          MONGODB_URL: ${{ secrets.MONGO_URL }}
+          PORT: ${{ secrets.PORT }}
+          LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
         run: |
-          echo "PORT=${{ secrets.PORT }}" >> .env.test
-          echo "MONGODB_URL=${{ secrets.MONGODB_URL }}" >> .env.test
-          echo "LOG_LEVEL=${{ secrets.LOG_LEVEL }}" >> .env.test
-
-      - name: Set environment variables
-        run: |
-          export PORT=${{ secrets.PORT }}
-          export MONGODB_URL=${{ secrets.MONGODB_URL }}
-          export LOG_LEVEL=${{ secrets.LOG_LEVEL }}
+          if [ "$MONGODB_URL" = "qa" ]; then
+            echo $QA_ENV_FILE | base64 --decode > .env.test
+          elif [ "$PORT" = "prod" ] || [ "$LOG_LEVEL" = "prod" ]; then
+            echo $PROD_ENV_FILE | base64 --decode > .env.test
+          fi
+      
 
       - name: Install dependencies
         run: yarn install
