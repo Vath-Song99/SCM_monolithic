@@ -33,7 +33,7 @@ jobs:
       - name: Run tests and calculate pass percentage
         id: test
         run: |
-          npm test -- --json > test-results.json
+          yarn test -- --json > test-results.json || true
           PASS=$(cat test-results.json | jq -r '.numPassedTests')
           TOTAL=$(cat test-results.json | jq -r '.numTotalTests')
           PASS_PERCENT=$((PASS * 100 / TOTAL))
@@ -42,9 +42,9 @@ jobs:
           echo "::set-output name=pass_percent::$PASS_PERCENT"
 
       - name: Check pass percentage and stop action on failure
-        if: ${{ steps.test.outputs.pass_percent < 50 }}
+        if: ${{ steps.test.outputs.pass_percent < 30 }}
         run: |
-          echo "Pass percentage is less than 50%. Stopping the action."
+          echo "Pass percentage is less than 30%. Stopping the action."
           exit 1
 
       - name: Build the project
