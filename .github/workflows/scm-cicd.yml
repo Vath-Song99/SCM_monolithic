@@ -22,8 +22,17 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Copy .env.test
-        run: cp .env.sample .env.test
+      - name: Create .env.test file
+        run: |
+          echo "MONGO_URL=$MONGODB_URL_TEST" >> .env.test
+        env:
+          MONGO_URL: ${{ secrets.MONGO_URL }}
+          ANOTHER_ENV_VAR: ${{ secrets.ANOTHER_ENV_VAR }}
+
+      - name: Load .env.test
+        uses: washwashsleep/action-dotenv-to-setenv@v1
+        with:
+          path: .env.test
 
       - name: Run tests and calculate pass percentage
         id: test
