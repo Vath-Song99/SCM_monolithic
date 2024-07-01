@@ -24,15 +24,19 @@ jobs:
 
       - name: Create .env.test file
         run: |
-          echo "MONGO_URL=$MONGODB_URL_TEST" >> .env.test
+          echo "MONGO_URL=${{ secrets.MONGO_URL_TEST }}" >> .env.test
+          echo "PORT=${{ secrets.PORT }}" >> .env.test
+          echo "LOG_LEVEL=${{ secrets.LOG_LEVEL }}" >> .env.test
         env:
           MONGO_URL: ${{ secrets.MONGO_URL }}
-          ANOTHER_ENV_VAR: ${{ secrets.ANOTHER_ENV_VAR }}
-
-      - name: Load .env.test
-        uses: washwashsleep/action-dotenv-to-setenv@v1
-        with:
-          path: .env.test
+          PORT: ${{ secrets.PORT }}
+          LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
+          
+      - name: Load environment variables
+        run: |
+          set -o allexport
+          source .env.test
+          set +o allexport
 
       - name: Run tests and calculate pass percentage
         id: test
