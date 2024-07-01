@@ -18,19 +18,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-      
-      - name: Create .env file
-        env:
-          MONGODB_URL: ${{ secrets.MONGO_URL }}
-          PORT: ${{ secrets.PORT }}
-          LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
-        run: |
-          if [ "$MONGODB_URL" = "qa" ]; then
-            echo $QA_ENV_FILE | base64 --decode > .env.test
-          elif [ "$PORT" = "prod" ] || [ "$LOG_LEVEL" = "prod" ]; then
-            echo $PROD_ENV_FILE | base64 --decode > .env.test
-          fi
-      
+
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          PORT: 3000
+          LOG_LEVEL: "debug"
+          MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          file_name: .env
 
       - name: Install dependencies
         run: yarn install

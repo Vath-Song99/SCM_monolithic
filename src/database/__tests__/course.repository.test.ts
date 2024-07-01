@@ -10,7 +10,7 @@ describe('CourseRepository Integration Test', () => {
   let courseRepository: CourseRepository;
 
   beforeAll(async () => {
-    const config = getConfig("test");
+    const config = getConfig();
     const uri = config.mongoUrl;
     if (!uri) {
       throw new Error('TEST_DB_URI environment variable is not set');

@@ -8,7 +8,7 @@ import { ApiRoutes } from '..';
 import courseRouter from '../course.routes';
 
 
-const config = getConfig("test")
+const config = getConfig()
 
 describe('Student API Routes', () => {
     let app: Application;

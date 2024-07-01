@@ -6,7 +6,7 @@ import courseRouter from '../course.routes';
 import { getConfig } from '@scm/utils/configs';
 import { ApiRoutes } from '..';
 
-const config = getConfig("test");
+const config = getConfig();
 
 describe('Course API Routes', () => {
     let app: Application;
